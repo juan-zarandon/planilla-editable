@@ -1,326 +1,390 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tabla de Medida de Adaptación - Editable</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background-color: white;
-            border: 4px solid #5eb9d4;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background-color: white;
+        border: 4px solid #5eb9d4;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
-        .header {
-            display: flex;
-            background-color: #5eb9d4;
-        }
+      .header {
+        display: flex;
+        background-color: #5eb9d4;
+        position: relative;
+      }
 
-        .header-code {
-            background-color: #5eb9d4;
-            color: white;
-            padding: 30px 40px;
-            font-size: 48px;
-            font-weight: bold;
-            width: 150px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      .header-code {
+        background-color: #5eb9d4;
+        color: white;
+        padding: 30px 40px;
+        font-size: 48px;
+        font-weight: bold;
+        width: 150px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .header-code-input {
-            background-color: transparent;
-            border: none;
-            color: white;
-            font-size: 48px;
-            font-weight: bold;
-            text-align: center;
-            width: 100%;
-            outline: none;
-        }
+      .header-logo {
+        background-color: #4a5c9e;
+        width: 200px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
 
-        .header-title {
-            background-color: #4a5c9e;
-            color: white;
-            padding: 30px 40px;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            border-bottom: 4px solid #5eb9d4;
-        }
+      .header-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
 
-        .header-title-input {
-            background-color: transparent;
-            border: none;
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            width: 100%;
-            outline: none;
-            line-height: 1.3;
-        }
+      .header-code-input {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 48px;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+        outline: none;
+      }
 
-        .table-row {
-            display: flex;
-            border-bottom: 3px solid #5eb9d4;
-        }
+      .header-title {
+        background-color: #4a5c9e;
+        color: white;
+        padding: 30px 40px;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        border-bottom: 4px solid #5eb9d4;
+      }
 
-        .table-row:last-child {
-            border-bottom: none;
-        }
+      .header-title-input {
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        width: 100%;
+        outline: none;
+        line-height: 1.3;
+        text-align: center;
+      }
 
-        .table-label {
-            background-color: #4a5c9e;
-            color: white;
-            padding: 25px 30px;
-            font-weight: bold;
-            font-size: 18px;
-            width: 280px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            justify-content: center;
-        }
+      .table-row {
+        display: flex;
+        border-bottom: 3px solid #5eb9d4;
+      }
 
-        .table-content {
-            background-color: #f8f9fa;
-            padding: 25px 35px;
-            flex: 1;
-        }
+      .table-row:last-child {
+        border-bottom: none;
+      }
 
+      .table-label {
+        background-color: #4a5c9e;
+        color: white;
+        padding: 25px 30px;
+        font-weight: bold;
+        font-size: 18px;
+        width: 280px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .table-content {
+        background-color: #f8f9fa;
+        padding: 25px 35px;
+        flex: 1;
+      }
+
+      .editable-field {
+        width: 100%;
+        border: none;
+        padding: 0;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: transparent;
+        resize: none;
+        min-height: auto;
+        overflow: hidden;
+      }
+
+      .editable-field:focus {
+        outline: none;
+      }
+
+      .editable-label {
+        color: #4a5c9e;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .subsection {
+        margin-bottom: 15px;
+      }
+
+      .subsection:last-child {
+        margin-bottom: 0;
+      }
+
+      @media print {
         .editable-field {
-            width: 100%;
-            border: none;
-            padding: 0;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: transparent;
-            resize: none;
-            min-height: auto;
-            overflow: hidden;
+          border: none;
+          background-color: transparent;
+          padding: 0;
         }
-
-        .editable-field:focus {
-            outline: none;
-        }
-
-        .subsection {
-            margin-bottom: 15px;
-        }
-
-        .subsection:last-child {
-            margin-bottom: 0;
-        }
-
-        .subsection strong {
-            color: #4a5c9e;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .subsection .editable-field {
-            min-height: auto;
-        }
-
-        /* Auto-resize textareas */
-        .editable-field {
-            overflow-y: hidden;
-        }
-
-        @media print {
-            .editable-field {
-                border: none;
-                background-color: transparent;
-                padding: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-            }
-
-            .table-row {
-                flex-direction: column;
-            }
-
-            .table-label {
-                width: 100%;
-            }
-
-            .header-code {
-                width: 100%;
-            }
-
-            .header-title {
-                font-size: 20px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <div class="header-code">
-                <input type="text" class="header-code-input" value="M1" maxlength="5">
-            </div>
-            <div class="header-title">
-                <input type="text" class="header-title-input" value="Título" placeholder="Ingrese el título de la medida">
-            </div>
+      <div class="header">
+        <div class="header-code">
+          <input
+            type="text"
+            class="header-code-input"
+            value="M1"
+            maxlength="5"
+          />
         </div>
+        <div class="header-title">
+          <input
+            type="text"
+            class="header-title-input"
+            value="Título"
+            placeholder="Ingrese el título de la medida"
+          />
+        </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Descripción</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Descripción General">Descripción General</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Descripción</div>
+        <div class="table-content">
+          <textarea class="editable-field" placeholder="Descripción General">
+Descripción General</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Objetivo específico</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Objetivo cualitativo/cuantitativo">Objetivo cualitativo/cuantitativo</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Objetivo específico</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Objetivo cualitativo/cuantitativo"
+          >
+Objetivo cualitativo/cuantitativo</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Componente que aborda</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Adaptación y/o Mitigación al Cambio Climático">Adaptación y/o Mitigación al Cambio Climático</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Componente que aborda</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Adaptación y/o Mitigación al Cambio Climático"
+          >
+Adaptación y/o Mitigación al Cambio Climático</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Estado</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="en ejecución o proyectada">en ejecución o proyectada</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Estado</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="en ejecución o proyectada"
+          >
+en ejecución o proyectada</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Alcance</div>
-            <div class="table-content">
-                <div class="subsection">
-                    <textarea class="editable-field editable-label" placeholder="Etiqueta">Geográfico:</textarea>
-                    <textarea class="editable-field" placeholder="Provincial, Regional, etc.">Provincial</textarea>
-                </div>
-                <div class="subsection">
-                    <textarea class="editable-field editable-label" placeholder="Etiqueta">Temporal (plazos y años):</textarea>
-                    <textarea class="editable-field" placeholder="Ingrese los plazos temporales"></textarea>
-                </div>
-                <div class="subsection">
-                    <textarea class="editable-field editable-label" placeholder="Etiqueta">Unidad de análisis:</textarea>
-                    <textarea class="editable-field" placeholder="Ingrese la unidad de análisis"></textarea>
-                </div>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Alcance</div>
+        <div class="table-content">
+          <div class="subsection">
+            <textarea
+              class="editable-field"
+              placeholder="Provincial, Regional, etc."
+            >
+Provincial, Nacional, Internacional...</textarea
+            >
+          </div>
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Organismo Responsable</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Quién está a cargo de la implementación">Quién está a cargo de la implementación.</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Organismo Responsable</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Quién está a cargo de la implementación"
+          >
+Quién está a cargo de la implementación.</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Barreras y Necesidades</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="indicar tipo y breve descripción">indicar tipo y breve descripción</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Barreras y Necesidades</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="indicar tipo y breve descripción"
+          >
+indicar tipo y breve descripción</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Riesgo Climático que aborda</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Riesgo climático específico (ej. Sequía, inundación)">Riesgo climático específico que aborda (ej. Sequía, inundación).</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Riesgo Climático que aborda</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Riesgo climático específico (ej. Sequía, inundación)"
+          >
+Riesgo climático específico que aborda (ej. Sequía, inundación).</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Vinculación</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Sector al que pertenece la medida">Sector al que pertenece la medida (ej. Energía, Transporte, Agricultura, Ganadería, Silvicultura y Otros Usos de la Tierra).</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Vinculación</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Sector al que pertenece la medida"
+          >
+Sector al que pertenece la medida (ej. Energía, Transporte, Agricultura, Ganadería, Silvicultura y Otros Usos de la Tierra).</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Instrumentos</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="normativas, programas o instrumentos de gestión necesarios">normativas, programas o instrumentos de gestión necesarios.</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Instrumentos</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="normativas, programas o instrumentos de gestión necesarios"
+          >
+normativas, programas o instrumentos de gestión necesarios.</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Disponibilidad<br>y<br>Fuente de Financiamiento</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional">Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional).</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">
+          Disponibilidad<br />y<br />Fuente de Financiamiento
         </div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional"
+          >
+Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional).</textarea
+          >
+        </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Indicadores<br>de<br>Progreso<br>y Monitoreo</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Indicadores cualitativos o cuantitativos">Indicadores cualitativos o cuantitativos para el seguimiento, especificando las unidades de ser necesario.</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">
+          Indicadores<br />de<br />Progreso<br />y Monitoreo
         </div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Indicadores cualitativos o cuantitativos"
+          >
+Indicadores cualitativos o cuantitativos para el seguimiento, especificando las unidades de ser necesario.</textarea
+          >
+        </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Estado de<br>Situación /<br>Avance %:</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Detalla el avance actual de la medida">Detalla el avance actual de la medida (ej. en diseño, en implementación, finalizada).</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Estado de<br />Situación /<br />Avance %:</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Detalla el avance actual de la medida"
+          >
+Detalla el avance actual de la medida (ej. en diseño, en implementación, finalizada).</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Fecha de inicio:</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="Indica cuándo se comenzó a implementar la medida">Indica cuándo se comenzó a implementar la medida.</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Fecha de inicio:</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="Indica cuándo se comenzó a implementar la medida"
+          >
+Indica cuándo se comenzó a implementar la medida.</textarea
+          >
         </div>
+      </div>
 
-        <div class="table-row">
-            <div class="table-label">Fecha esperada de finalización:</div>
-            <div class="table-content">
-                <textarea class="editable-field" placeholder="El plazo o la fecha límite para completar la acción">El plazo o la fecha límite para completar la acción</textarea>
-            </div>
+      <div class="table-row">
+        <div class="table-label">Fecha esperada de finalización:</div>
+        <div class="table-content">
+          <textarea
+            class="editable-field"
+            placeholder="El plazo o la fecha límite para completar la acción"
+          >
+El plazo o la fecha límite para completar la acción</textarea
+          >
         </div>
+      </div>
     </div>
 
     <script>
-        // Auto-resize all textareas
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
+      // Auto-resize all textareas
+      function autoResize(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+      }
 
-        // Initialize all textareas
-        document.addEventListener('DOMContentLoaded', function() {
-            const textareas = document.querySelectorAll('.editable-field');
-            textareas.forEach(textarea => {
-                autoResize(textarea);
-                textarea.addEventListener('input', function() {
-                    autoResize(this);
-                });
-            });
+      // Initialize all textareas
+      document.addEventListener("DOMContentLoaded", function () {
+        const textareas = document.querySelectorAll(".editable-field");
+        textareas.forEach((textarea) => {
+          autoResize(textarea);
+          textarea.addEventListener("input", function () {
+            autoResize(this);
+          });
         });
+      });
     </script>
-</body>
+  </body>
 </html>
