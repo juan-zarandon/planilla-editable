@@ -21,7 +21,6 @@
         * {
           box-sizing: border-box;
         }
-        /* Oculta los botones de descarga/impresión */
         .download-button {
           display: none !important;
         }
@@ -40,30 +39,31 @@
       }
 
       .container {
-        max-width: 1400px; /* Ancho máximo para el contenedor */
-        /* BLOQUE BLANCO SUPERIOR */
+        max-width: 1400px;
         margin: 40px auto 0 auto;
         background-color: white;
         border: 4px solid #5eb9d4;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
-      /* --- Estilos del Encabezado con TABLA (LAYOUT QUE FUNCIONA) --- */
+      /* --- Estilos del Encabezado con TABLA --- */
       .header {
         width: 100%;
         border-collapse: collapse;
         border-bottom: 4px solid #5eb9d4;
       }
 
+      /* *** SOLUCIÓN DEFINITIVA PARA EL TAMAÑO DEL RECUADRO DEL CÓDIGO *** */
       .header-code {
         background-color: #5eb9d4; /* Color azul claro */
         color: white;
         padding: 30px 20px;
         font-size: 48px;
         font-weight: bold;
-        width: 100px;
+        /* FUERZA EL ANCHO MÍNIMO DEL TD A LO NECESARIO */
+        width: 1px; /* Usar 1px o 1% en tablas obliga a usar el contenido mínimo */
+        white-space: nowrap; /* Evita que el código se divida en dos líneas */
         text-align: center;
-        /* CLAVE: Pega M1 abajo */
         vertical-align: bottom;
       }
 
@@ -73,17 +73,22 @@
         color: white;
         font-size: 48px;
         font-weight: bold;
-        text-align: center;
-        width: 100%;
+        /* EL INPUT SE AJUSTA A LO NECESARIO DENTRO DEL TD */
+        width: auto;
+        min-width: 40px; /* Mínimo para que no desaparezca */
         outline: none;
+        text-align: center;
+        /* Añadir display: block para un mejor control del ancho */
+        display: block;
+        margin: 0 auto;
       }
+      /* *************************************************************** */
 
       .header-title {
         background-color: #4a5c9e; /* Color azul oscuro */
         color: white;
         padding: 30px 40px;
         text-align: center;
-        /* CLAVE: Centra el título verticalmente */
         vertical-align: middle;
       }
 
@@ -161,9 +166,21 @@
         font-weight: bold;
         transition: background-color 0.3s;
       }
+
+      .back-to-index {
+        background-color: #4a5c9e;
+        display: block;
+        width: 250px;
+        text-align: center;
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
+    <a href="index.html" class="download-button back-to-index">
+      ⬅️ Volver al Índice
+    </a>
+
     <div class="container">
       <table class="header">
         <tr>
@@ -172,7 +189,7 @@
               type="text"
               class="header-code-input"
               value="M1"
-              maxlength="5"
+              maxlength="10"
             />
           </td>
           <td class="header-title">
@@ -375,7 +392,7 @@ El plazo o la fecha límite para completar la acción</textarea
       class="download-button"
       style="background-color: #5eb9d4"
     >
-      🖼️ Descargar como Imagen (PNG)
+      🖼️ Descargar como Imagen (PNG, Alta Resolución)
     </button>
 
     <button
@@ -391,11 +408,51 @@ El plazo o la fecha límite para completar la acción</textarea
       class="download-button"
       style="background-color: #dc3545"
     >
-      🗑️ Limpiar todos los datos
+      🗑️ Limpiar los datos de este plan
     </button>
 
     <script>
-      const DATA_KEY = "planillaData";
+      // 1. CONFIGURACIÓN DEL PLAN ACTUAL (Mantiene la separación por ID)
+      const urlParams = new URLSearchParams(window.location.search);
+      const planId = urlParams.get("id") || "M1";
+      const DATA_KEY = `planillaData_${planId}`;
+
+      const allPlans = [
+        { id: "M1", title: "Medida 1: Adaptación de Sistemas Hídricos" },
+        { id: "M2", title: "Medida 2: Mitigación en el Sector Transporte" },
+        { id: "M3", title: "Medida 3: Uso Eficiente de la Energía" },
+        { id: "M4", title: "Medida 4: Gestión de Riesgos Climáticos Urbanos" },
+        {
+          id: "M5",
+          title: "Medida 5: Restauración de Ecosistemas Productivos",
+        },
+        { id: "M6", title: "Medida 6: Desarrollo de Alerta Temprana Agrícola" },
+        { id: "M7", title: "Medida 7: Fomento de Energías Renovables" },
+        { id: "M8", title: "Medida 8: Mejora de la Infraestructura Costera" },
+        { id: "M9", title: "Medida 9: Capacitación en Economía Circular" },
+        {
+          id: "M10",
+          title: "Medida 10: Inversión en Redes de Frío Sostenibles",
+        },
+        { id: "M11", title: "Medida 11: Plan de Reforestación Zonal" },
+        { id: "M12", title: "Medida 12: Regulación de Emisiones Industriales" },
+        { id: "M13", title: "Medida 13: Adaptación del Sistema Sanitario" },
+        { id: "M14", title: "Medida 14: Tecnología de Captura de Carbono" },
+        { id: "M15", title: "Medida 15: Promoción de la Movilidad Eléctrica" },
+        { id: "M16", title: "Medida 16: Optimización de Cuencas Fluviales" },
+        { id: "M17", title: "Medida 17: Biocombustibles y Sustitución de Gas" },
+        { id: "M18", title: "Medida 18: Construcción Resiliente al Calor" },
+        { id: "M19", title: "Medida 19: Investigación en Sequías Prolongadas" },
+        {
+          id: "M20",
+          title: "Medida 20: Monitoreo de Gases de Efecto Invernadero",
+        },
+      ];
+
+      const currentPlan = allPlans.find((p) => p.id === planId) || {
+        id: planId,
+        title: "Título",
+      };
 
       // --- FUNCIONES DE PERSISTENCIA (localStorage) ---
 
@@ -417,14 +474,26 @@ El plazo o la fecha límite para completar la acción</textarea
 
       function loadData() {
         const storedData = localStorage.getItem(DATA_KEY);
+
+        let codeInput = document.querySelector(".header-code-input");
+        let titleInput = document.querySelector(".header-title-input");
+
+        codeInput.value = currentPlan.id;
+        titleInput.value = currentPlan.title;
+        document.title = `${currentPlan.id}: ${currentPlan.title}`;
+
         if (!storedData) return;
 
         const data = JSON.parse(storedData);
 
-        document.querySelector(".header-code-input").value =
-          data["header-code"] || "M1";
-        document.querySelector(".header-title-input").value =
-          data["header-title"] || "Título";
+        codeInput.value =
+          data["header-code"] !== undefined
+            ? data["header-code"]
+            : currentPlan.id;
+        titleInput.value =
+          data["header-title"] !== undefined
+            ? data["header-title"]
+            : currentPlan.title;
 
         const textareas = document.querySelectorAll(".editable-field");
         textareas.forEach((textarea, index) => {
@@ -434,14 +503,14 @@ El plazo o la fecha límite para completar la acción</textarea
           }
         });
 
-        autoResize(document.querySelector(".header-code-input"));
-        autoResize(document.querySelector(".header-title-input"));
+        autoResize(codeInput);
+        autoResize(titleInput);
       }
 
       function resetAllData() {
         if (
           confirm(
-            "¿Estás seguro de que quieres limpiar todos los datos? Esta acción no se puede deshacer."
+            `¿Estás seguro de que quieres limpiar todos los datos para el plan ${planId}? Esta acción no se puede deshacer.`
           )
         ) {
           localStorage.removeItem(DATA_KEY);
@@ -449,7 +518,7 @@ El plazo o la fecha límite para completar la acción</textarea
         }
       }
 
-      // --- FUNCIÓN DE DESCARGA COMO IMAGEN (CON ESCALADO DE ALTA RESOLUCIÓN) ---
+      // --- FUNCIÓN DE DESCARGA COMO IMAGEN (ALTA RESOLUCIÓN) ---
       function downloadAsImage() {
         const element = document.querySelector(".container");
         const titleInput = document.querySelector(".header-title-input").value;
@@ -466,7 +535,6 @@ El plazo o la fecha límite para completar la acción</textarea
           return;
         }
 
-        // Configuración para mayor resolución (2.5 veces más grande)
         const scaleFactor = 2.5;
         const originalWidth = element.offsetWidth;
         const originalHeight = element.offsetHeight;
@@ -475,11 +543,9 @@ El plazo o la fecha límite para completar la acción</textarea
           .toPng(element, {
             quality: 1,
             bgcolor: "#ffffff",
-            // Establece la resolución final del archivo PNG
             width: originalWidth * scaleFactor,
             height: originalHeight * scaleFactor,
             style: {
-              // Escala el contenido antes de la captura para obtener más píxeles
               transform: `scale(${scaleFactor})`,
               transformOrigin: "top left",
               width: originalWidth + "px",
@@ -520,24 +586,22 @@ El plazo o la fecha límite para completar la acción</textarea
 
       // Initialize all event listeners and load data
       document.addEventListener("DOMContentLoaded", function () {
-        loadData(); // Carga datos al inicio
+        loadData();
 
-        const textareas = document.querySelectorAll(".editable-field");
-        textareas.forEach((textarea) => {
-          autoResize(textarea);
-          textarea.addEventListener("input", function () {
-            autoResize(this);
-            saveData(); // Auto-guardado
+        const editableElements = document.querySelectorAll(
+          ".editable-field, .header-code-input, .header-title-input"
+        );
+        editableElements.forEach((el) => {
+          if (el.tagName === "TEXTAREA") {
+            autoResize(el);
+          }
+          el.addEventListener("input", function () {
+            if (el.tagName === "TEXTAREA") {
+              autoResize(this);
+            }
+            saveData();
           });
         });
-
-        // Agregar listeners de auto-guardado a los inputs del encabezado
-        document
-          .querySelector(".header-code-input")
-          .addEventListener("input", saveData);
-        document
-          .querySelector(".header-title-input")
-          .addEventListener("input", saveData);
       });
     </script>
   </body>

@@ -3,541 +3,113 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tabla de Medida de Adaptación - Editable</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
-
+    <title>Índice de Medidas de Adaptación</title>
     <style>
-      /* --- Estilos de Impresión y Globales --- */
-      @page {
-        size: A4;
-        margin: 10mm;
-      }
-
-      @media print {
-        body {
-          -webkit-print-color-adjust: exact;
-          color-adjust: exact;
-        }
-        * {
-          box-sizing: border-box;
-        }
-        /* Oculta los botones de descarga/impresión */
-        .download-button {
-          display: none !important;
-        }
-      }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
       body {
         font-family: Arial, sans-serif;
-        padding: 20px;
+        padding: 40px;
         background-color: #f5f5f5;
       }
-
       .container {
-        max-width: 1400px; /* Ancho máximo para el contenedor */
-        /* BLOQUE BLANCO SUPERIOR */
-        margin: 40px auto 0 auto;
+        max-width: 900px;
+        margin: 0 auto;
         background-color: white;
-        border: 4px solid #5eb9d4;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       }
-
-      /* --- Estilos del Encabezado con TABLA (LAYOUT QUE FUNCIONA) --- */
-      .header {
-        width: 100%;
-        border-collapse: collapse;
-        border-bottom: 4px solid #5eb9d4;
-      }
-
-      .header-code {
-        background-color: #5eb9d4; /* Color azul claro */
-        color: white;
-        padding: 30px 20px;
-        font-size: 48px;
-        font-weight: bold;
-        width: 100px;
+      h1 {
+        color: #4a5c9e;
         text-align: center;
-        /* CLAVE: Pega M1 abajo */
-        vertical-align: bottom;
+        margin-bottom: 30px;
       }
-
-      .header-code-input {
-        background-color: transparent;
-        border: none;
-        color: white;
-        font-size: 48px;
-        font-weight: bold;
-        text-align: center;
-        width: 100%;
-        outline: none;
-      }
-
-      .header-title {
-        background-color: #4a5c9e; /* Color azul oscuro */
-        color: white;
-        padding: 30px 40px;
-        text-align: center;
-        /* CLAVE: Centra el título verticalmente */
-        vertical-align: middle;
-      }
-
-      .header-title-input {
-        background-color: transparent;
-        border: none;
-        color: white;
-        font-size: 24px;
-        font-weight: bold;
-        width: 100%;
-        outline: none;
-        line-height: 1.3;
-        text-align: center;
-      }
-
-      /* --- Estilos de las Filas de la Tabla --- */
-      .table-row {
-        display: flex;
-        border-bottom: 3px solid #5eb9d4;
-      }
-
-      .table-row:last-child {
-        border-bottom: none;
-      }
-
-      .table-label {
-        background-color: #4a5c9e;
-        color: white;
-        padding: 25px 30px;
-        font-weight: bold;
-        font-size: 18px;
-        width: 280px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-      }
-
-      .table-content {
-        background-color: #f8f9fa;
-        padding: 25px 35px;
-        flex: 1;
-      }
-
-      .editable-field {
-        width: 100%;
-        border: none;
+      .plan-list {
+        list-style: none;
         padding: 0;
-        font-size: 16px;
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        background-color: transparent;
-        resize: none;
-        min-height: auto;
-        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
       }
-
-      .editable-field:focus {
-        outline: none;
-      }
-
-      /* --- Estilos de Botones (Para Descarga) --- */
-      .download-button {
-        display: block;
-        margin: 15px auto;
-        padding: 12px 25px;
-        font-size: 16px;
-        color: white;
-        border: none;
+      .plan-list li {
+        border: 1px solid #ddd;
         border-radius: 5px;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      .plan-list li:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+      .plan-list a {
+        display: block;
+        padding: 15px;
+        text-decoration: none;
+        color: #333;
+        background-color: #f8f9fa;
         font-weight: bold;
-        transition: background-color 0.3s;
+        font-size: 16px;
+        border-left: 5px solid #5eb9d4;
+      }
+      .plan-list a:hover {
+        background-color: #e9ecef;
+        color: #4a5c9e;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <table class="header">
-        <tr>
-          <td class="header-code">
-            <input
-              type="text"
-              class="header-code-input"
-              value="M1"
-              maxlength="5"
-            />
-          </td>
-          <td class="header-title">
-            <input
-              type="text"
-              class="header-title-input"
-              value="Título"
-              placeholder="Ingrese el título de la medida"
-            />
-          </td>
-        </tr>
-      </table>
-
-      <div class="table-row">
-        <div class="table-label">Descripción</div>
-        <div class="table-content">
-          <textarea class="editable-field" placeholder="Descripción General">
-Descripción General</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Objetivo específico</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Objetivo cualitativo/cuantitativo"
-          >
-Objetivo cualitativo/cuantitativo</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Componente que aborda</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Adaptación y/o Mitigación al Cambio Climático"
-          >
-Adaptación y/o Mitigación al Cambio Climático</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Estado</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="en ejecución o proyectada"
-          >
-en ejecución o proyectada</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Alcance</div>
-        <div class="table-content">
-          <div class="subsection">
-            <textarea
-              class="editable-field"
-              placeholder="Provincial, Regional, etc."
-            >
-Provincial, Nacional, Internacional...</textarea
-            >
-          </div>
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Organismo Responsable</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Quién está a cargo de la implementación"
-          >
-Quién está a cargo de la implementación.</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Barreras y Necesidades</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="indicar tipo y breve descripción"
-          >
-indicar tipo y breve descripción</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Riesgo Climático que aborda</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Riesgo climático específico (ej. Sequía, inundación)"
-          >
-Riesgo climático específico que aborda (ej. Sequía, inundación).</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Vinculación</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Sector al que pertenece la medida"
-          >
-Sector al que pertenece la medida (ej. Energía, Transporte, Agricultura, Ganadería, Silvicultura y Otros Usos de la Tierra).</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Instrumentos</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="normativas, programas o instrumentos de gestión necesarios"
-          >
-normativas, programas o instrumentos de gestión necesarios.</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">
-          Disponibilidad<br />y<br />Fuente de Financiamiento
-        </div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional"
-          >
-Fondos Provinciales, Nacionales, Mixto, Cooperación Internacional).</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">
-          Indicadores<br />de<br />Progreso<br />y Monitoreo
-        </div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Indicadores cualitativos o cuantitativos"
-          >
-Indicadores cualitativos o cuantitativos para el seguimiento, especificando las unidades de ser necesario.</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Estado de<br />Situación /<br />Avance %:</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Detalla el avance actual de la medida"
-          >
-Detalla el avance actual de la medida (ej. en diseño, en implementación, finalizada).</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Fecha de inicio:</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="Indica cuándo se comenzó a implementar la medida"
-          >
-Indica cuándo se comenzó a implementar la medida.</textarea
-          >
-        </div>
-      </div>
-
-      <div class="table-row">
-        <div class="table-label">Fecha esperada de finalización:</div>
-        <div class="table-content">
-          <textarea
-            class="editable-field"
-            placeholder="El plazo o la fecha límite para completar la acción"
-          >
-El plazo o la fecha límite para completar la acción</textarea
-          >
-        </div>
-      </div>
+      <h1>Listado de Medidas de Adaptación</h1>
+      <ul id="plan-list" class="plan-list"></ul>
     </div>
 
-    <button
-      onclick="downloadAsImage()"
-      class="download-button"
-      style="background-color: #5eb9d4"
-    >
-      🖼️ Descargar como Imagen (PNG)
-    </button>
-
-    <button
-      onclick="window.print()"
-      class="download-button"
-      style="background-color: #4a5c9e"
-    >
-      💾 Imprimir (Guardar como PDF)
-    </button>
-
-    <button
-      onclick="resetAllData()"
-      class="download-button"
-      style="background-color: #dc3545"
-    >
-      🗑️ Limpiar todos los datos
-    </button>
-
     <script>
-      const DATA_KEY = "planillaData";
+      // DEFINICIÓN DE LOS 20 PLANES
+      // CLAVE: El 'id' (M1, M2...) es usado por localStorage para guardar los datos por separado.
+      const allPlans = [
+        { id: "M1", title: "Medida 1: Adaptación de Sistemas Hídricos" },
+        { id: "M2", title: "Medida 2: Mitigación en el Sector Transporte" },
+        { id: "M3", title: "Medida 3: Uso Eficiente de la Energía" },
+        { id: "M4", title: "Medida 4: Gestión de Riesgos Climáticos Urbanos" },
+        {
+          id: "M5",
+          title: "Medida 5: Restauración de Ecosistemas Productivos",
+        },
+        { id: "M6", title: "Medida 6: Desarrollo de Alerta Temprana Agrícola" },
+        { id: "M7", title: "Medida 7: Fomento de Energías Renovables" },
+        { id: "M8", title: "Medida 8: Mejora de la Infraestructura Costera" },
+        { id: "M9", title: "Medida 9: Capacitación en Economía Circular" },
+        {
+          id: "M10",
+          title: "Medida 10: Inversión en Redes de Frío Sostenibles",
+        },
+        { id: "M11", title: "Medida 11: Plan de Reforestación Zonal" },
+        { id: "M12", title: "Medida 12: Regulación de Emisiones Industriales" },
+        { id: "M13", title: "Medida 13: Adaptación del Sistema Sanitario" },
+        { id: "M14", title: "Medida 14: Tecnología de Captura de Carbono" },
+        { id: "M15", title: "Medida 15: Promoción de la Movilidad Eléctrica" },
+        { id: "M16", title: "Medida 16: Optimización de Cuencas Fluviales" },
+        { id: "M17", title: "Medida 17: Biocombustibles y Sustitución de Gas" },
+        { id: "M18", title: "Medida 18: Construcción Resiliente al Calor" },
+        { id: "M19", title: "Medida 19: Investigación en Sequías Prolongadas" },
+        {
+          id: "M20",
+          title: "Medida 20: Monitoreo de Gases de Efecto Invernadero",
+        },
+      ];
 
-      // --- FUNCIONES DE PERSISTENCIA (localStorage) ---
+      document.addEventListener("DOMContentLoaded", () => {
+        const listElement = document.getElementById("plan-list");
 
-      function saveData() {
-        const data = {};
-        data["header-code"] =
-          document.querySelector(".header-code-input").value;
-        data["header-title"] = document.querySelector(
-          ".header-title-input"
-        ).value;
+        allPlans.forEach((plan) => {
+          const listItem = document.createElement("li");
+          // IMPORTANTE: El enlace apunta a planilla.html y le pasa el ID por URL
+          const link = document.createElement("a");
+          link.href = `planilla.html?id=${plan.id}`;
+          link.textContent = `${plan.id}: ${plan.title}`;
 
-        const textareas = document.querySelectorAll(".editable-field");
-        textareas.forEach((textarea, index) => {
-          data["field-" + index] = textarea.value;
+          listItem.appendChild(link);
+          listElement.appendChild(listItem);
         });
-
-        localStorage.setItem(DATA_KEY, JSON.stringify(data));
-      }
-
-      function loadData() {
-        const storedData = localStorage.getItem(DATA_KEY);
-        if (!storedData) return;
-
-        const data = JSON.parse(storedData);
-
-        document.querySelector(".header-code-input").value =
-          data["header-code"] || "M1";
-        document.querySelector(".header-title-input").value =
-          data["header-title"] || "Título";
-
-        const textareas = document.querySelectorAll(".editable-field");
-        textareas.forEach((textarea, index) => {
-          if (data["field-" + index] !== undefined) {
-            textarea.value = data["field-" + index];
-            autoResize(textarea);
-          }
-        });
-
-        autoResize(document.querySelector(".header-code-input"));
-        autoResize(document.querySelector(".header-title-input"));
-      }
-
-      function resetAllData() {
-        if (
-          confirm(
-            "¿Estás seguro de que quieres limpiar todos los datos? Esta acción no se puede deshacer."
-          )
-        ) {
-          localStorage.removeItem(DATA_KEY);
-          window.location.reload();
-        }
-      }
-
-      // --- FUNCIÓN DE DESCARGA COMO IMAGEN (CON ESCALADO DE ALTA RESOLUCIÓN) ---
-      function downloadAsImage() {
-        const element = document.querySelector(".container");
-        const titleInput = document.querySelector(".header-title-input").value;
-        const codeInput = document.querySelector(".header-code-input").value;
-
-        const buttons = document.querySelectorAll(".download-button");
-        buttons.forEach((btn) => (btn.style.display = "none"));
-
-        if (typeof domtoimage === "undefined") {
-          alert(
-            "Error: La librería dom-to-image no se ha cargado. No se puede descargar la imagen."
-          );
-          buttons.forEach((btn) => (btn.style.display = "block"));
-          return;
-        }
-
-        // Configuración para mayor resolución (2.5 veces más grande)
-        const scaleFactor = 2.5;
-        const originalWidth = element.offsetWidth;
-        const originalHeight = element.offsetHeight;
-
-        domtoimage
-          .toPng(element, {
-            quality: 1,
-            bgcolor: "#ffffff",
-            // Establece la resolución final del archivo PNG
-            width: originalWidth * scaleFactor,
-            height: originalHeight * scaleFactor,
-            style: {
-              // Escala el contenido antes de la captura para obtener más píxeles
-              transform: `scale(${scaleFactor})`,
-              transformOrigin: "top left",
-              width: originalWidth + "px",
-              height: originalHeight + "px",
-              margin: "0",
-            },
-          })
-          .then(function (dataUrl) {
-            buttons.forEach((btn) => (btn.style.display = "block"));
-
-            const a = document.createElement("a");
-            a.href = dataUrl;
-
-            let filename = `Planilla_${codeInput.replace(
-              /\s/g,
-              "_"
-            )}_${titleInput.replace(/\s/g, "_")}.png`;
-            a.download = filename.replace(/[^a-z0-9_.-]/gi, "");
-
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          })
-          .catch((error) => {
-            buttons.forEach((btn) => (btn.style.display = "block"));
-            console.error("Error al generar la imagen:", error);
-            alert("No se pudo generar la imagen. Intenta guardar como PDF.");
-          });
-      }
-
-      // Auto-resize only textareas
-      function autoResize(element) {
-        if (element.tagName === "TEXTAREA") {
-          element.style.height = "auto";
-          element.style.height = element.scrollHeight + "px";
-        }
-      }
-
-      // Initialize all event listeners and load data
-      document.addEventListener("DOMContentLoaded", function () {
-        loadData(); // Carga datos al inicio
-
-        const textareas = document.querySelectorAll(".editable-field");
-        textareas.forEach((textarea) => {
-          autoResize(textarea);
-          textarea.addEventListener("input", function () {
-            autoResize(this);
-            saveData(); // Auto-guardado
-          });
-        });
-
-        // Agregar listeners de auto-guardado a los inputs del encabezado
-        document
-          .querySelector(".header-code-input")
-          .addEventListener("input", saveData);
-        document
-          .querySelector(".header-title-input")
-          .addEventListener("input", saveData);
       });
     </script>
   </body>
