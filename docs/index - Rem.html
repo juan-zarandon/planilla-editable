@@ -4,7 +4,29 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tabla de Medida de Adaptación - Editable</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+
     <style>
+      /* --- Estilos de Impresión y Globales --- */
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+          color-adjust: exact;
+        }
+        * {
+          box-sizing: border-box;
+        }
+        /* Oculta los botones de descarga/impresión */
+        .download-button {
+          display: none !important;
+        }
+      }
+
       * {
         margin: 0;
         padding: 0;
@@ -18,46 +40,31 @@
       }
 
       .container {
-        max-width: 1400px;
-        margin: 0 auto;
+        max-width: 1400px; /* Ancho máximo para el contenedor */
+        /* BLOQUE BLANCO SUPERIOR */
+        margin: 40px auto 0 auto;
         background-color: white;
         border: 4px solid #5eb9d4;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
+      /* --- Estilos del Encabezado con TABLA (LAYOUT QUE FUNCIONA) --- */
       .header {
-        display: flex;
-        background-color: #5eb9d4;
-        position: relative;
+        width: 100%;
+        border-collapse: collapse;
+        border-bottom: 4px solid #5eb9d4;
       }
 
       .header-code {
-        background-color: #5eb9d4;
+        background-color: #5eb9d4; /* Color azul claro */
         color: white;
-        padding: 30px 40px;
+        padding: 30px 20px;
         font-size: 48px;
         font-weight: bold;
-        width: 150px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .header-logo {
-        background-color: #4a5c9e;
-        width: 200px;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-
-      .header-logo img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
+        width: 100px;
+        text-align: center;
+        /* CLAVE: Pega M1 abajo */
+        vertical-align: bottom;
       }
 
       .header-code-input {
@@ -72,13 +79,12 @@
       }
 
       .header-title {
-        background-color: #4a5c9e;
+        background-color: #4a5c9e; /* Color azul oscuro */
         color: white;
         padding: 30px 40px;
-        flex: 1;
-        display: flex;
-        align-items: center;
-        border-bottom: 4px solid #5eb9d4;
+        text-align: center;
+        /* CLAVE: Centra el título verticalmente */
+        vertical-align: middle;
       }
 
       .header-title-input {
@@ -93,6 +99,7 @@
         text-align: center;
       }
 
+      /* --- Estilos de las Filas de la Tabla --- */
       .table-row {
         display: flex;
         border-bottom: 3px solid #5eb9d4;
@@ -140,49 +147,44 @@
         outline: none;
       }
 
-      .editable-label {
-        color: #4a5c9e;
+      /* --- Estilos de Botones (Para Descarga) --- */
+      .download-button {
+        display: block;
+        margin: 15px auto;
+        padding: 12px 25px;
+        font-size: 16px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .subsection {
-        margin-bottom: 15px;
-      }
-
-      .subsection:last-child {
-        margin-bottom: 0;
-      }
-
-      @media print {
-        .editable-field {
-          border: none;
-          background-color: transparent;
-          padding: 0;
-        }
+        transition: background-color 0.3s;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <div class="header-code">
-          <input
-            type="text"
-            class="header-code-input"
-            value="M1"
-            maxlength="5"
-          />
-        </div>
-        <div class="header-title">
-          <input
-            type="text"
-            class="header-title-input"
-            value="Título"
-            placeholder="Ingrese el título de la medida"
-          />
-        </div>
-      </div>
+      <table class="header">
+        <tr>
+          <td class="header-code">
+            <input
+              type="text"
+              class="header-code-input"
+              value="M1"
+              maxlength="5"
+            />
+          </td>
+          <td class="header-title">
+            <input
+              type="text"
+              class="header-title-input"
+              value="Título"
+              placeholder="Ingrese el título de la medida"
+            />
+          </td>
+        </tr>
+      </table>
 
       <div class="table-row">
         <div class="table-label">Descripción</div>
@@ -368,22 +370,174 @@ El plazo o la fecha límite para completar la acción</textarea
       </div>
     </div>
 
+    <button
+      onclick="downloadAsImage()"
+      class="download-button"
+      style="background-color: #5eb9d4"
+    >
+      🖼️ Descargar como Imagen (PNG)
+    </button>
+
+    <button
+      onclick="window.print()"
+      class="download-button"
+      style="background-color: #4a5c9e"
+    >
+      💾 Imprimir (Guardar como PDF)
+    </button>
+
+    <button
+      onclick="resetAllData()"
+      class="download-button"
+      style="background-color: #dc3545"
+    >
+      🗑️ Limpiar todos los datos
+    </button>
+
     <script>
-      // Auto-resize all textareas
-      function autoResize(textarea) {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
+      const DATA_KEY = "planillaData";
+
+      // --- FUNCIONES DE PERSISTENCIA (localStorage) ---
+
+      function saveData() {
+        const data = {};
+        data["header-code"] =
+          document.querySelector(".header-code-input").value;
+        data["header-title"] = document.querySelector(
+          ".header-title-input"
+        ).value;
+
+        const textareas = document.querySelectorAll(".editable-field");
+        textareas.forEach((textarea, index) => {
+          data["field-" + index] = textarea.value;
+        });
+
+        localStorage.setItem(DATA_KEY, JSON.stringify(data));
       }
 
-      // Initialize all textareas
+      function loadData() {
+        const storedData = localStorage.getItem(DATA_KEY);
+        if (!storedData) return;
+
+        const data = JSON.parse(storedData);
+
+        document.querySelector(".header-code-input").value =
+          data["header-code"] || "M1";
+        document.querySelector(".header-title-input").value =
+          data["header-title"] || "Título";
+
+        const textareas = document.querySelectorAll(".editable-field");
+        textareas.forEach((textarea, index) => {
+          if (data["field-" + index] !== undefined) {
+            textarea.value = data["field-" + index];
+            autoResize(textarea);
+          }
+        });
+
+        autoResize(document.querySelector(".header-code-input"));
+        autoResize(document.querySelector(".header-title-input"));
+      }
+
+      function resetAllData() {
+        if (
+          confirm(
+            "¿Estás seguro de que quieres limpiar todos los datos? Esta acción no se puede deshacer."
+          )
+        ) {
+          localStorage.removeItem(DATA_KEY);
+          window.location.reload();
+        }
+      }
+
+      // --- FUNCIÓN DE DESCARGA COMO IMAGEN (CON ESCALADO DE ALTA RESOLUCIÓN) ---
+      function downloadAsImage() {
+        const element = document.querySelector(".container");
+        const titleInput = document.querySelector(".header-title-input").value;
+        const codeInput = document.querySelector(".header-code-input").value;
+
+        const buttons = document.querySelectorAll(".download-button");
+        buttons.forEach((btn) => (btn.style.display = "none"));
+
+        if (typeof domtoimage === "undefined") {
+          alert(
+            "Error: La librería dom-to-image no se ha cargado. No se puede descargar la imagen."
+          );
+          buttons.forEach((btn) => (btn.style.display = "block"));
+          return;
+        }
+
+        // Configuración para mayor resolución (2.5 veces más grande)
+        const scaleFactor = 2.5;
+        const originalWidth = element.offsetWidth;
+        const originalHeight = element.offsetHeight;
+
+        domtoimage
+          .toPng(element, {
+            quality: 1,
+            bgcolor: "#ffffff",
+            // Establece la resolución final del archivo PNG
+            width: originalWidth * scaleFactor,
+            height: originalHeight * scaleFactor,
+            style: {
+              // Escala el contenido antes de la captura para obtener más píxeles
+              transform: `scale(${scaleFactor})`,
+              transformOrigin: "top left",
+              width: originalWidth + "px",
+              height: originalHeight + "px",
+              margin: "0",
+            },
+          })
+          .then(function (dataUrl) {
+            buttons.forEach((btn) => (btn.style.display = "block"));
+
+            const a = document.createElement("a");
+            a.href = dataUrl;
+
+            let filename = `Planilla_${codeInput.replace(
+              /\s/g,
+              "_"
+            )}_${titleInput.replace(/\s/g, "_")}.png`;
+            a.download = filename.replace(/[^a-z0-9_.-]/gi, "");
+
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          })
+          .catch((error) => {
+            buttons.forEach((btn) => (btn.style.display = "block"));
+            console.error("Error al generar la imagen:", error);
+            alert("No se pudo generar la imagen. Intenta guardar como PDF.");
+          });
+      }
+
+      // Auto-resize only textareas
+      function autoResize(element) {
+        if (element.tagName === "TEXTAREA") {
+          element.style.height = "auto";
+          element.style.height = element.scrollHeight + "px";
+        }
+      }
+
+      // Initialize all event listeners and load data
       document.addEventListener("DOMContentLoaded", function () {
+        loadData(); // Carga datos al inicio
+
         const textareas = document.querySelectorAll(".editable-field");
         textareas.forEach((textarea) => {
           autoResize(textarea);
           textarea.addEventListener("input", function () {
             autoResize(this);
+            saveData(); // Auto-guardado
           });
         });
+
+        // Agregar listeners de auto-guardado a los inputs del encabezado
+        document
+          .querySelector(".header-code-input")
+          .addEventListener("input", saveData);
+        document
+          .querySelector(".header-title-input")
+          .addEventListener("input", saveData);
       });
     </script>
   </body>
