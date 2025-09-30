@@ -53,16 +53,17 @@
         border-bottom: 4px solid #5eb9d4;
       }
 
-      /* *** SOLUCIÓN DEFINITIVA PARA EL TAMAÑO DEL RECUADRO DEL CÓDIGO *** */
+      /* *** AJUSTE DE ANCHO FINAL: 95PX EN EL INPUT *** */
       .header-code {
         background-color: #5eb9d4; /* Color azul claro */
         color: white;
+        /* Padding original. El contenedor de la celda */
         padding: 30px 20px;
         font-size: 48px;
         font-weight: bold;
-        /* FUERZA EL ANCHO MÍNIMO DEL TD A LO NECESARIO */
-        width: 1px; /* Usar 1px o 1% en tablas obliga a usar el contenido mínimo */
-        white-space: nowrap; /* Evita que el código se divida en dos líneas */
+        /* Forzamos al mínimo para que la celda no se estire de más */
+        width: 1px;
+        white-space: nowrap;
         text-align: center;
         vertical-align: bottom;
       }
@@ -73,14 +74,13 @@
         color: white;
         font-size: 48px;
         font-weight: bold;
-        /* EL INPUT SE AJUSTA A LO NECESARIO DENTRO DEL TD */
-        width: auto;
-        min-width: 40px; /* Mínimo para que no desaparezca */
+        padding: 0;
+        /* La clave: ancho pequeño y FIJO, ajustado a 95px */
+        width: 95px;
         outline: none;
         text-align: center;
-        /* Añadir display: block para un mejor control del ancho */
+        /* Vuelve a ser un bloque para centrar mejor dentro de la celda */
         display: block;
-        margin: 0 auto;
       }
       /* *************************************************************** */
 
